@@ -1,5 +1,7 @@
 # EventGate-TS: event-gated mixture-of-experts for 24-hour traffic-volume forecasting
 
+**Repo:** <https://github.com/shisiyu-cmd/eventgate-ts>
+
 A small, fully reproducible machine-learning study on the UCI *Metro Interstate Traffic
 Volume* dataset. It is organised as **data layer → method layer → analysis layer**, and it
 reports what the experiments actually produced, including two hypotheses that failed.
