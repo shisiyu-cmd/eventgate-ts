@@ -1,0 +1,132 @@
+{
+  "n_rows": 48204,
+  "time_start": "2012-10-02 09:00:00",
+  "time_end": "2018-09-30 23:00:00",
+  "expected_hours": 52551,
+  "missing_hours": 11976,
+  "missing_hours_examples": [
+    "2012-10-03 07:00:00",
+    "2012-10-03 10:00:00",
+    "2012-10-03 11:00:00",
+    "2012-10-03 17:00:00",
+    "2012-10-05 02:00:00",
+    "2012-10-05 04:00:00",
+    "2012-10-06 03:00:00",
+    "2012-10-07 01:00:00",
+    "2012-10-07 02:00:00",
+    "2012-10-09 03:00:00"
+  ],
+  "duplicate_timestamps": 7629,
+  "holiday_rows": 61,
+  "holiday_values": [
+    "Christmas Day",
+    "Columbus Day",
+    "Independence Day",
+    "Labor Day",
+    "Martin Luther King Jr Day",
+    "Memorial Day",
+    "New Years Day",
+    "State Fair",
+    "Thanksgiving Day",
+    "Veterans Day",
+    "Washingtons Birthday"
+  ],
+  "weather_main_counts": {
+    "Clouds": 15164,
+    "Clear": 13391,
+    "Mist": 5950,
+    "Rain": 5672,
+    "Snow": 2876,
+    "Drizzle": 1821,
+    "Haze": 1360,
+    "Thunderstorm": 1034,
+    "Fog": 912,
+    "Smoke": 20,
+    "Squall": 4
+  },
+  "weather_desc_n_classes": 38,
+  "volume_zero_rows": 2,
+  "volume_zero_ratio": 4.149033275246868e-05,
+  "volume_zero_run_lengths": {
+    "1": 2
+  },
+  "volume_zero_longest_run": 1,
+  "volume_zero_by_year": {
+    "2012": 0,
+    "2013": 0,
+    "2014": 0,
+    "2015": 0,
+    "2016": 2,
+    "2017": 0,
+    "2018": 0
+  },
+  "temp_zero_rows": 10,
+  "temp_min_nonzero": 243.39,
+  "rain_max": 9831.3,
+  "rain_p999": 13.60345999999976,
+  "rain_rows_over_50mm": 2,
+  "snow_max": 0.51,
+  "snow_rows_positive": 63,
+  "clouds_out_of_range": 0,
+  "volume_stats": {
+    "mean": 3259.8183553232097,
+    "std": 1986.8606704463589,
+    "min": 0,
+    "max": 7280,
+    "q01": 257.0,
+    "q99": 6701.970000000001
+  },
+  "by_year": [
+    {
+      "year": 2012,
+      "rows": 2559,
+      "mean_volume": 3207.8,
+      "zero_rows": 0
+    },
+    {
+      "year": 2013,
+      "rows": 8573,
+      "mean_volume": 3286.76,
+      "zero_rows": 0
+    },
+    {
+      "year": 2014,
+      "rows": 4839,
+      "mean_volume": 3250.94,
+      "zero_rows": 0
+    },
+    {
+      "year": 2015,
+      "rows": 4373,
+      "mean_volume": 3242.9,
+      "zero_rows": 0
+    },
+    {
+      "year": 2016,
+      "rows": 9306,
+      "mean_volume": 3169.44,
+      "zero_rows": 2
+    },
+    {
+      "year": 2017,
+      "rows": 10605,
+      "mean_volume": 3340.7,
+      "zero_rows": 0
+    },
+    {
+      "year": 2018,
+      "rows": 7949,
+      "mean_volume": 3260.11,
+      "zero_rows": 0
+    }
+  ],
+  "missing_by_year": {
+    "2012": 72,
+    "2013": 1466,
+    "2014": 4259,
+    "2015": 5167,
+    "2016": 946,
+    "2017": 47,
+    "2018": 19
+  }
+}

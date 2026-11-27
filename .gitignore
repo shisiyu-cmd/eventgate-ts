@@ -1,0 +1,15 @@
+# python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+
+# raw data is re-downloadable, processed tensors are derived
+data/raw/*.zip
+data/raw/*.csv.gz
+data/processed/
+runs/
+figures/*.png
+
+# keep the small provenance files
+!results/**
