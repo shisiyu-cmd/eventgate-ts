@@ -105,7 +105,10 @@ def main() -> None:
     # ---- paired tests on the horizon-flattened point forecasts ----------- #
     pairs = [("eventgate", "patchtst"), ("eventgate", "lightgbm"),
              ("window_lgbm", "lightgbm"), ("patchtst", "lightgbm"),
-             ("eventgate", "seasonal_avg_24_168")]
+             ("eventgate", "seasonal_avg_24_168"),
+             ("eventgate_vs", "patchtst"), ("eventgate_vs", "lightgbm"),
+             ("eventgate", "eventgate_vs"), ("eventgate", "eventgate-nofreq"),
+             ("eventgate", "eventgate-noev"), ("eventgate", "eventgate-nogate")]
     tests = []
     for a, b in pairs:
         ka = next((k for k in preds if k.startswith(a + "|")), None)
@@ -115,15 +118,18 @@ def main() -> None:
         pa, pb = preds[ka], preds[kb]
         if pa.shape != pb.shape:
             continue
-        dm = dm_test(truth, pb, pa, h=24)          # H0: b at least as good as a
+        dm = dm_test(truth, pa, pb, h=24)          # H0: equal expected loss
         w = wilcoxon_test(truth, pa, pb)
         bs = block_bootstrap_ci(truth, pa, pb, block=24, n_boot=1000)
+        # one sign convention everywhere: delta = MAE(a) - MAE(b), so a negative
+        # delta always means model_a is better.  block_bootstrap_ci returns the
+        # CI of (mae2 - mae1), hence the negation and the swapped bounds.
         tests.append({
             "model_a": ka.split("|")[0], "model_b": kb.split("|")[0],
             "mae_a": bs["mae1"], "mae_b": bs["mae2"],
             "mae_a_ci": bs["mae1_ci"], "mae_b_ci": bs["mae2_ci"],
             "delta_mae": bs["mae1"] - bs["mae2"],
-            "delta_ci_lo": bs["diff_ci"][0], "delta_ci_hi": bs["diff_ci"][1],
+            "delta_ci_lo": -bs["diff_ci"][1], "delta_ci_hi": -bs["diff_ci"][0],
             "bootstrap_p": bs["p_two_sided"],
             "dm_stat": dm["dm_stat"], "dm_p": dm["p_value"],
             "wilcoxon_p": w["p_value"],
