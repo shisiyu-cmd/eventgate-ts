@@ -22,10 +22,15 @@ plt.rcParams.update({
     "axes.grid": True, "grid.alpha": 0.25, "axes.spines.top": False,
     "axes.spines.right": False, "figure.autolayout": True,
 })
-C = {"eventgate": "#c0392b", "patchtst": "#2980b9", "lstm": "#27ae60",
-     "tcn": "#8e44ad", "mlp": "#7f8c8d", "lightgbm": "#e67e22",
-     "window_lgbm": "#d35400", "seasonal_avg_24_168": "#95a5a6",
-     "seasonal_24": "#bdc3c7"}
+C = {"eventgate": "#c0392b", "eventgate_vs": "#922b21",
+     "eventgate_v1": "#e8968f", "eventgate-nofreq": "#e74c3c",
+     "eventgate-nogate": "#f1948a", "eventgate-noev": "#7b241c",
+     "eventgate-norevin": "#d98880", "eventgate_q-quantile": "#fadbd8",
+     "patchtst": "#2980b9", "lstm": "#27ae60", "tcn": "#8e44ad",
+     "mlp": "#7f8c8d", "lightgbm": "#e67e22", "window_lgbm": "#1e1e1e",
+     "seasonal_avg_24_168": "#95a5a6", "seasonal_24": "#bdc3c7",
+     "seasonal_168": "#7f8c8d", "naive_t-1": "#d5d8dc", "drift_24": "#eaeded"}
+MARK = {"window_lgbm": "s", "lightgbm": "D", "patchtst": "o", "eventgate": "o"}
 
 
 def _save(fig, name):
@@ -86,12 +91,17 @@ def fig_data_coverage():
 
 def fig_training_curves():
     fig, ax = plt.subplots(1, 2, figsize=(9, 3.4))
+    # curated subset: the ablations differ only in the last few MAE units, so
+    # plotting all 12 runs makes the panel a red smear
+    feat = ["eventgate", "eventgate_vs", "patchtst", "lstm", "tcn", "mlp"]
     for d in sorted(RUNS.glob(f"*-h{H}-s0")):
         f = d / "history.json"
         if not f.exists():
             continue
-        h = pd.DataFrame(json.loads(f.read_text()))
         name = d.name.replace(f"-h{H}-s0", "")
+        if name not in feat:
+            continue
+        h = pd.DataFrame(json.loads(f.read_text()))
         ax[0].plot(h["epoch"], h["train_loss"], lw=1.2, label=name, color=C.get(name))
         ax[1].plot(h["epoch"], h["mae"], lw=1.2, label=name, color=C.get(name))
     ax[0].set_title("training loss (smooth L1 on raw volume)")
@@ -228,14 +238,19 @@ def fig_robustness():
         print("skip fig7: run src.analysis.robustness first")
         return
     df = pd.read_csv(p)
+    # a curated subset keeps the panel readable; the full matrix (12 models x 12
+    # conditions) is in results/metrics/robustness_h24.csv
+    feat = ["window_lgbm", "patchtst", "eventgate", "eventgate_vs",
+            "eventgate-norevin", "lstm", "mlp"]
     fig, ax = plt.subplots(1, 2, figsize=(9, 3.4))
     for tag, a in [("gap", ax[0]), ("block", ax[1])]:
-        sub = df[df.condition == tag]
+        sub = df[(df.condition == tag) & (df.model.isin(feat))]
         base = df[df.condition == "clean"].set_index("model")["mae"]
         for m, g in sub.groupby("model"):
             g = g.sort_values("k")
-            a.plot(g["k"], g["mae"] / base.get(m, np.nan), marker="o", ms=3,
-                   lw=1.3, label=m, color=C.get(m))
+            a.plot(g["k"], g["mae"] / base.get(m, np.nan),
+                   marker=MARK.get(m, "o"), ms=3, lw=1.3, label=m,
+                   color=C.get(m, "#34495e"))
         a.set_xlabel("masked hours")
         a.set_ylabel("MAE relative to clean input")
         a.set_title(f"{tag} corruption")
